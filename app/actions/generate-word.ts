@@ -3,32 +3,28 @@
 import { google } from '@ai-sdk/google';
 import { generateObject } from 'ai';
 import { z } from 'zod';
+import { unstable_cache } from 'next/cache'; // <--- 1. Import Cache
+
+// 2. Define the Schema
 const bollyWordSchema = z.object({
   word: z.string().describe("The vocabulary word being defined"),
   meaning: z.string().describe("A simple, clear English definition of the word"),
   movie: z.string().describe("Title of the Bollywood movie selected"),
   character: z.string().describe("The name of the character involved in the scene (e.g., 'Baburao', 'Geet', 'Rancho')"),
-  
-  // This is the 'Scene Card' content
   context: z.string().describe("A brief, 1-sentence description of the scene that matches the word's vibe."),
-  
-  // The 'Hook' - The funny/dramatic sentence
   filmySentence: z.string().describe("A sentence using the word in the context of the movie scene. It can use Hinglish for impact."),
-  
-  // Optional: A famous dialogue if it fits
-  famousDialogue: z.string().optional().describe("A famous dialogue from that scene, if applicable (e.g., 'Utha le re baba')"),
-  
-  // To help the UI pick a color/theme
+  famousDialogue: z.string().optional().describe("A famous dialogue from that scene, if applicable"),
   mood: z.enum(['Funny', 'Romantic', 'Action', 'Drama', 'Horror']).describe("The mood of the scene"),
 });
 
-export async function generateBollyWord(word: string) {
-  try {
-    // 2. Call Gemini
-    const { object } = await generateObject({
-      model: google('gemini-2.5-flash'), 
-      schema: bollyWordSchema,
-      prompt: `
+// 3. The Core Logic (Wrapped in Cache)
+const getCachedBollyWord = unstable_cache(
+  async (word: string) => {
+    try {
+      const { object } = await generateObject({
+        model: google('gemini-2.5-flash'), 
+        schema: bollyWordSchema,
+        prompt: `
         You are an expert Bollywood movie buff and an English vocabulary teacher.
         
         Task: Explain the word "${word}" using a famous Indian/Bollywood movie scene.
@@ -43,12 +39,24 @@ export async function generateBollyWord(word: string) {
         Example Output Movie: "Manjhi: The Mountain Man"
         Example Sentence: "Persistence is what Dashrath Manjhi showed when he spent 22 years carving a path, proving that if you have enough grit, you can literally move mountains."
       `,
-    });
-
-    return { success: true, data: object };
-
-  } catch (error) {
-    console.error("Error generating BollyWord:", error);
-    return { success: false, error: "Failed to generate word. Maybe the server is 'Housefull'?" };
+      });
+      return { success: true, data: object };
+    } catch (error) {
+      console.error("Error generating BollyWord:", error);
+      return { success: false, error: "Failed to generate word. Maybe the server is 'Housefull'?" };
+    }
+  },
+  ['bolly-word-cache'], // Cache Key
+  {
+    revalidate: 86400, // Cache for 24 Hours (86400 seconds)
+    tags: ['bolly-words']
   }
+);
+
+// 4. The Public Action
+export async function generateBollyWord(word: string) {
+  // Normalize input so "Love" and "love" use the same cache entry
+  const cleanWord = word.trim().toLowerCase();
+  
+  return await getCachedBollyWord(cleanWord);
 }
