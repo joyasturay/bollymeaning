@@ -22,7 +22,7 @@ const getCachedBollyWord = unstable_cache(
   async (word: string) => {
     try {
       const { object } = await generateObject({
-        model: google('gemini-2.5-flash'), 
+        model: google('gemini-2.5-flash-lite'), 
         schema: bollyWordSchema,
         prompt: `
         You are an expert Bollywood movie buff and an English vocabulary teacher.
