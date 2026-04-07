@@ -3,10 +3,8 @@
 import { useState } from 'react';
 import { generateBollyWord } from '../actions/generate-word';
 import BollyCard from '../components/BollyCard';
+import { BollyWordData } from '../lib/fallback';
 import { Loader2, Search, Sparkles, Film } from 'lucide-react';
-
-// 1. The Magic List
-// These words guarantee dramatic/funny results from the AI
 const MAGIC_WORDS = [
   "Betrayal", "Audacity", "Destiny", "Confusion", 
   "Revenge", "Sacrifice", "Chaos", "Euphoria", 
@@ -16,7 +14,7 @@ const MAGIC_WORDS = [
 
 export default function Home() {
   const [word, setWord] = useState('');
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<BollyWordData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -32,11 +30,11 @@ export default function Home() {
       const response = await generateBollyWord(query);
       
       if (response.success) {
-        setResult(response.data);
+        setResult(response.data as BollyWordData);
       } else {
         setError("Scene cut! The director couldn't find that word. Try another?");
       }
-    } catch (err) {
+    } catch  {
       setError("Network error. Check your internet connection.");
     } finally {
       setLoading(false);
@@ -113,7 +111,7 @@ export default function Home() {
           className="mt-6 group relative inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white border border-slate-200 text-slate-600 text-sm font-bold hover:border-purple-300 hover:text-purple-600 hover:shadow-md transition-all active:scale-95"
         >
           <Sparkles size={16} className="text-purple-500 group-hover:rotate-12 transition-transform" />
-          <span>I'm feeling lucky (Magic Word)</span>
+          <span>I&apos;m feeling lucky (Magic Word)</span>
           
           {/* Subtle gradient glow on hover */}
           <div className="absolute inset-0 rounded-full bg-purple-50 opacity-0 group-hover:opacity-100 -z-10 transition-opacity" />

@@ -102,7 +102,7 @@ export default function BollyCard({ data }: BollyCardProps) {
               {data.word}
             </h2>
             <p className="text-lg italic opacity-90 font-medium">
-              "{data.meaning}"
+              `{data.meaning}`
             </p>
           </div>
 
@@ -132,7 +132,7 @@ export default function BollyCard({ data }: BollyCardProps) {
               <div className="mt-4 pt-4 border-t border-black/10">
                 <p className="text-sm italic flex gap-2 items-start">
                   <Quote size={16} className="shrink-0 mt-1 fill-current opacity-50" />
-                  <span>"{data.famousDialogue}"</span>
+                  <span>`{data.famousDialogue}`</span>
                 </p>
               </div>
             )}

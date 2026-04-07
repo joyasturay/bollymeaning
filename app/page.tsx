@@ -5,7 +5,6 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-red-100 selection:text-red-900 overflow-hidden">
       
-      {/* --- BACKGROUND EFFECTS (Static CSS) --- */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-red-50 rounded-full blur-[100px] opacity-60" />
         <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-50 rounded-full blur-[100px] opacity-60" />
@@ -27,8 +26,6 @@ export default function Home() {
           <span>About</span>
         </div>
       </nav>
-
-      {/* --- HERO SECTION --- */}
       <main className="relative z-10 flex flex-col items-center text-center pt-20 pb-32 px-4 max-w-4xl mx-auto">
         
         {/* Badge */}
@@ -41,7 +38,7 @@ export default function Home() {
 
         {/* Headline */}
         <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-slate-900 mb-6 leading-[0.9] animate-in fade-in slide-in-from-bottom-8 duration-1000">
-          Don't memorize. <br />
+          Don &apos;t memorize. <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-purple-600">
             Visualize.
           </span>

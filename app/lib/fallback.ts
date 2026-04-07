@@ -1,4 +1,14 @@
-export const PRE_GENERATED_WORDS: Record<string, any> = {
+export interface BollyWordData{
+  word: string;
+  meaning: string;
+  movie: string;
+  character: string;
+  context: string;
+  filmySentence: string;
+  famousDialogue?: string;
+  mood: 'Funny' | 'Romantic' | 'Action' | 'Drama' | 'Horror';
+}
+export const PRE_GENERATED_WORDS: Record<string, BollyWordData> = {
   "betrayal": {
     word: "Betrayal",
     meaning: "The action of breaking someone's trust.",
